@@ -2,19 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/task_provider.dart';
 import '../models/task.dart';
-import 'package:uuid/uuid.dart';
 
-class AddTaskScreen extends StatelessWidget {
+class EditTaskScreen extends StatelessWidget {
+  final Task task;
+
+  EditTaskScreen({required this.task, Key? key}) : super(key: key);
+
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
-  AddTaskScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    _titleController.text = task.title;
+    _descriptionController.text = task.description;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Task'),
+        title: const Text('Edit Task'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -31,18 +35,16 @@ class AddTaskScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                final String id = Uuid().v4();
-                final String title = _titleController.text;
-                final String description = _descriptionController.text;
-                final newTask = Task(
-                  id: id,
-                  title: title,
-                  description: description,
+                final updatedTask = Task(
+                  id: task.id,
+                  title: _titleController.text,
+                  description: _descriptionController.text,
+                  isCompleted: task.isCompleted,
                 );
-                Provider.of<TaskProvider>(context, listen: false).addTask(newTask);
+                Provider.of<TaskProvider>(context, listen: false).updateTask(updatedTask);
                 Navigator.of(context).pop();
               },
-              child: const Text('Add Task'),
+              child: const Text('Update Task'),
             ),
           ],
         ),

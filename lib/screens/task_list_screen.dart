@@ -2,24 +2,50 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/task_provider.dart';
 import 'add_task_screen.dart';
+import 'edit_task_screen.dart';
 import '../widgets/task_tile.dart';
 
-class TaskListScreen extends StatelessWidget {
-  TaskListScreen({Key? key}) : super(key: key);  // Ajoute le paramètre key
+class TaskListScreen extends StatefulWidget {
+  @override
+  _TaskListScreenState createState() => _TaskListScreenState();
+}
+
+class _TaskListScreenState extends State<TaskListScreen> {
+  bool showCompleted = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Task Manager'),  // Ajoute const
+        title: Text('Task Manager'),
+        actions: [
+          IconButton(
+            icon: Icon(showCompleted ? Icons.check_box : Icons.check_box_outline_blank),
+            onPressed: () {
+              setState(() {
+                showCompleted = !showCompleted;
+              });
+            },
+          ),
+        ],
       ),
       body: Consumer<TaskProvider>(
         builder: (context, taskProvider, child) {
+          var tasks = taskProvider.filterTasks(showCompleted);
           return ListView.builder(
-            itemCount: taskProvider.tasks.length,
+            itemCount: tasks.length,
             itemBuilder: (context, index) {
-              var task = taskProvider.tasks[index];
-              return TaskTile(task: task);
+              var task = tasks[index];
+              return TaskTile(
+                task: task,
+                onEdit: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => EditTaskScreen(task: task),
+                    ),
+                  );
+                },
+              );
             },
           );
         },
@@ -32,7 +58,7 @@ class TaskListScreen extends StatelessWidget {
             ),
           );
         },
-        child: const Icon(Icons.add),  // Ajoute const
+        child: Icon(Icons.add),
       ),
     );
   }
