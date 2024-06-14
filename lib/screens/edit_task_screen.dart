@@ -1,50 +1,67 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/task_provider.dart';
 import '../models/task.dart';
+import '../providers/task_provider.dart';
 
-class EditTaskScreen extends StatelessWidget {
+class EditTaskScreen extends StatefulWidget {
   final Task task;
 
-  EditTaskScreen({required this.task, Key? key}) : super(key: key);
+  EditTaskScreen({required this.task});
 
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  @override
+  _EditTaskScreenState createState() => _EditTaskScreenState();
+}
+
+class _EditTaskScreenState extends State<EditTaskScreen> {
+  late TextEditingController _titleController;
+  late TextEditingController _descriptionController;
+
+  @override
+  void initState() {
+    _titleController = TextEditingController(text: widget.task.title);
+    _descriptionController = TextEditingController(text: widget.task.description);
+    super.initState();
+  }
+
+  void _submitData() {
+    final enteredTitle = _titleController.text;
+    final enteredDescription = _descriptionController.text;
+
+    if (enteredTitle.isEmpty || enteredDescription.isEmpty) {
+      return;
+    }
+
+    final updatedTask = Task(
+      id: widget.task.id,
+      title: enteredTitle,
+      description: enteredDescription,
+      isCompleted: widget.task.isCompleted,
+    );
+
+    Provider.of<TaskProvider>(context, listen: false).editTask(widget.task.id, updatedTask);
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
-    _titleController.text = task.title;
-    _descriptionController.text = task.description;
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Task'),
-      ),
+      appBar: AppBar(title: Text('Modifier la Tâche')),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: Column(
-          children: [
+          children: <Widget>[
             TextField(
               controller: _titleController,
-              decoration: const InputDecoration(labelText: 'Title'),
+              decoration: InputDecoration(labelText: 'Titre'),
             ),
             TextField(
               controller: _descriptionController,
-              decoration: const InputDecoration(labelText: 'Description'),
+              decoration: InputDecoration(labelText: 'Description'),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                final updatedTask = Task(
-                  id: task.id,
-                  title: _titleController.text,
-                  description: _descriptionController.text,
-                  isCompleted: task.isCompleted,
-                );
-                Provider.of<TaskProvider>(context, listen: false).updateTask(updatedTask);
-                Navigator.of(context).pop();
-              },
-              child: const Text('Update Task'),
+              onPressed: _submitData,
+              child: Text('Sauvegarder les Modifications'),
             ),
           ],
         ),

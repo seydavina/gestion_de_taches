@@ -4,45 +4,53 @@ import '../providers/task_provider.dart';
 import '../models/task.dart';
 import 'package:uuid/uuid.dart';
 
-class AddTaskScreen extends StatelessWidget {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+class AddTaskScreen extends StatefulWidget {
+  @override
+  _AddTaskScreenState createState() => _AddTaskScreenState();
+}
 
-  AddTaskScreen({Key? key}) : super(key: key);
+class _AddTaskScreenState extends State<AddTaskScreen> {
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+
+  void _submitData() {
+    final enteredTitle = _titleController.text;
+    final enteredDescription = _descriptionController.text;
+
+    if (enteredTitle.isEmpty || enteredDescription.isEmpty) {
+      return;
+    }
+
+    final newTask = Task(
+      id: Uuid().v4(),
+      title: enteredTitle,
+      description: enteredDescription,
+    );
+
+    Provider.of<TaskProvider>(context, listen: false).addTask(newTask);
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add Task'),
-      ),
+      appBar: AppBar(title: Text('Ajouter une Tâche')),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: Column(
-          children: [
+          children: <Widget>[
             TextField(
               controller: _titleController,
-              decoration: const InputDecoration(labelText: 'Title'),
+              decoration: InputDecoration(labelText: 'Titre'),
             ),
             TextField(
               controller: _descriptionController,
-              decoration: const InputDecoration(labelText: 'Description'),
+              decoration: InputDecoration(labelText: 'Description'),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                final String id = Uuid().v4();
-                final String title = _titleController.text;
-                final String description = _descriptionController.text;
-                final newTask = Task(
-                  id: id,
-                  title: title,
-                  description: description,
-                );
-                Provider.of<TaskProvider>(context, listen: false).addTask(newTask);
-                Navigator.of(context).pop();
-              },
-              child: const Text('Add Task'),
+              onPressed: _submitData,
+              child: Text('Ajouter la Tâche'),
             ),
           ],
         ),

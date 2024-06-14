@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/task_provider.dart';
-import 'add_task_screen.dart';
-import 'edit_task_screen.dart';
 import '../widgets/task_tile.dart';
+import 'add_task_screen.dart';
 
 class TaskListScreen extends StatefulWidget {
   @override
@@ -11,46 +10,35 @@ class TaskListScreen extends StatefulWidget {
 }
 
 class _TaskListScreenState extends State<TaskListScreen> {
-  bool showCompleted = true;
+  bool _showCompletedTasks = false;
 
   @override
   Widget build(BuildContext context) {
+    final taskProvider = Provider.of<TaskProvider>(context);
+    final tasks = _showCompletedTasks ? taskProvider.getFilteredTasks(true) : taskProvider.getFilteredTasks(false);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Task Manager'),
+        title: Text('Todo App'),
         actions: [
           IconButton(
-            icon: Icon(showCompleted ? Icons.check_box : Icons.check_box_outline_blank),
+            icon: Icon(_showCompletedTasks ? Icons.visibility_off : Icons.visibility),
             onPressed: () {
               setState(() {
-                showCompleted = !showCompleted;
+                _showCompletedTasks = !_showCompletedTasks;
               });
             },
           ),
         ],
       ),
-      body: Consumer<TaskProvider>(
-        builder: (context, taskProvider, child) {
-          var tasks = taskProvider.filterTasks(showCompleted);
-          return ListView.builder(
-            itemCount: tasks.length,
-            itemBuilder: (context, index) {
-              var task = tasks[index];
-              return TaskTile(
-                task: task,
-                onEdit: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => EditTaskScreen(task: task),
-                    ),
-                  );
-                },
-              );
-            },
-          );
+      body: ListView.builder(
+        itemCount: tasks.length,
+        itemBuilder: (ctx, index) {
+          return TaskTile(task: tasks[index]);
         },
       ),
       floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -58,7 +46,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
             ),
           );
         },
-        child: Icon(Icons.add),
       ),
     );
   }
