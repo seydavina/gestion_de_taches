@@ -42,7 +42,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TaskFilter(
+            child: TaskItem(
               initialFilters: filters,
               onFilterChanged: (newFilters) {
                 setState(() {
