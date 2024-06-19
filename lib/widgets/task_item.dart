@@ -1,40 +1,71 @@
 import 'package:flutter/material.dart';
-import '../models/task.dart';
-import '../constants/colors.dart';
-import '../constants/style_text.dart';
 
-class TaskItem extends StatelessWidget {
-  final Task task;
-  final Function onDelete;
-  final Function onEdit;
+class TaskItem extends StatefulWidget {
+  final Map<String, bool> initialFilters;
+  final Function(Map<String, bool>) onFilterChanged;
 
   const TaskItem({
-    required this.task,
-    required this.onDelete,
-    required this.onEdit,
     super.key,
+    required this.initialFilters,
+    required this.onFilterChanged,
   });
 
   @override
+  _TaskItemState createState() => _TaskItemState();
+}
+
+class _TaskItemState extends State<TaskItem> {
+  late Map<String, bool> _filters;
+
+  @override
+  void initState() {
+    super.initState();
+    _filters = Map.from(widget.initialFilters);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        title: Text(task.title, style: AppTextStyles.title3),
-        subtitle: Text(task.description, style: AppTextStyles.title4),
-        trailing: Row(
+    return AlertDialog(
+      title: const Text('Filter par'),
+      content: SingleChildScrollView(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.edit, color: AppColors.blue),
-              onPressed: () => onEdit(),
-            ),
-            IconButton(
-              icon: const Icon(Icons.delete, color: AppColors.red),
-              onPressed: () => onDelete(),
-            ),
-          ],
+          children: _filters.keys.map((status) {
+            return CheckboxListTile(
+              title: Text(status,
+                  style: TextStyle(color: _getStatusColor(status))),
+              value: _filters[status],
+              onChanged: (bool? value) {
+                setState(() {
+                  _filters[status] = value!;
+                });
+              },
+            );
+          }).toList(),
         ),
       ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            widget.onFilterChanged(_filters);
+            Navigator.of(context).pop();
+          },
+          child: const Text('Appliquer'),
+        ),
+      ],
     );
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'In progress':
+        return Colors.blue;
+      case 'Done':
+        return Colors.green;
+      case 'Bug':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
   }
 }

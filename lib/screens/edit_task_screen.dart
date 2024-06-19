@@ -1,50 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../models/task.dart';
-import '../providers/task_provider.dart';
-import '../constants/colors.dart';
-import '../constants/style_text.dart';
+import 'package:gestion_de_taches/database/database_helper.dart';
 
-class EditTaskScreen extends StatefulWidget {
-  final Task task;
+class EditTaskPage extends StatefulWidget {
+  final Map<String, String> task;
+  final Function(Map<String, String>) onUpdate;
 
-  const EditTaskScreen({required this.task, super.key});
+  const EditTaskPage({super.key, required this.task, required this.onUpdate});
 
   @override
-  _EditTaskScreenState createState() => _EditTaskScreenState();
+  _EditTaskPageState createState() => _EditTaskPageState();
 }
 
-class _EditTaskScreenState extends State<EditTaskScreen> {
-  late String _title;
-  late String _description;
+class _EditTaskPageState extends State<EditTaskPage> {
+  late TextEditingController _titleController;
+  late TextEditingController _descriptionController;
   late String _status;
 
   @override
   void initState() {
     super.initState();
-    _title = widget.task.title;
-    _description = widget.task.description;
-    _status = widget.task.status;
+    _titleController = TextEditingController(text: widget.task['title']);
+    _descriptionController =
+        TextEditingController(text: widget.task['description']);
+    _status = widget.task['status']!;
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.grey1,
-        title: const Text('Modifier', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.black,
+        title: const Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text('Todo App', style: TextStyle(color: Colors.white)),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Modifier la tâche', style: AppTextStyles.title1),
+            const Text('Modifier',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Status', style: AppTextStyles.title3),
+                const Text(
+                  'Status',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   decoration: BoxDecoration(
@@ -69,7 +84,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                               Icon(
                                 Icons.circle,
                                 color: _getStatusColor(value),
-                                size: 16,
+                                size: 16, // Slightly bigger circle
                               ),
                               const SizedBox(width: 8),
                               Text(value),
@@ -85,7 +100,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                               Icon(
                                 Icons.circle,
                                 color: _getStatusColor(_status),
-                                size: 16,
+                                size: 16, // Slightly bigger circle
                               ),
                               const SizedBox(width: 8),
                               const Text('Status'),
@@ -100,49 +115,44 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
             ),
             const SizedBox(height: 16),
             TextField(
+              controller: _titleController,
               decoration: const InputDecoration(
-                labelText: 'Titre',
+                labelText: 'Nouvelle tache',
                 border: OutlineInputBorder(),
               ),
-              onChanged: (value) {
-                setState(() {
-                  _title = value;
-                });
-              },
-              controller: TextEditingController(text: _title),
             ),
             const SizedBox(height: 16),
             TextField(
+              controller: _descriptionController,
+              maxLines: 5,
               decoration: const InputDecoration(
                 labelText: 'Description',
                 border: OutlineInputBorder(),
               ),
-              maxLines: 5,
-              onChanged: (value) {
-                setState(() {
-                  _description = value;
-                });
-              },
-              controller: TextEditingController(text: _description),
             ),
             const SizedBox(height: 16),
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  final updatedTask = Task(
-                    id: widget.task.id,
-                    title: _title,
-                    description: _description,
-                    status: _status,
-                  );
-                  Provider.of<TaskProvider>(context, listen: false).updateTask(updatedTask);
-                  Navigator.pop(context, true);
+                onPressed: () async {
+                  await DatabaseHelper().updateTask({
+                    'id': widget.task['id']!,
+                    'title': _titleController.text,
+                    'description': _descriptionController.text,
+                    'status': _status,
+                  });
+                  widget.onUpdate({
+                    'id': widget.task['id']!,
+                    'title': _titleController.text,
+                    'description': _descriptionController.text,
+                    'status': _status,
+                  });
+                  Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.grey2,
+                  backgroundColor: Colors.grey,
                   minimumSize: const Size(150, 50),
                 ),
-                child: const Text('Modifier', style: AppTextStyles.title2),
+                child: const Text('Modifier', style: TextStyle(fontSize: 18)),
               ),
             ),
           ],
@@ -152,7 +162,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         onPressed: () {
           Navigator.pop(context);
         },
-        backgroundColor: AppColors.red,
+        backgroundColor: Colors.red,
         child: const Icon(Icons.close, color: Colors.white),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
@@ -162,13 +172,13 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   Color _getStatusColor(String status) {
     switch (status) {
       case 'In progress':
-        return AppColors.blue;
+        return Colors.blue;
       case 'Done':
-        return AppColors.green;
+        return Colors.green;
       case 'Bug':
-        return AppColors.red;
+        return Colors.red;
       default:
-        return AppColors.grey2;
+        return Colors.grey;
     }
   }
 }

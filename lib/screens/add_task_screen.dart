@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:simple_todo_app/database/database_helper.dart';
+import 'package:gestion_de_taches/database/database_helper.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
