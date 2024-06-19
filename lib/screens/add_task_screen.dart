@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import '../database/database_helper.dart';
-import '../constants/colors.dart';
-import '../constants/style_text.dart';
+import 'package:simple_todo_app/database/database_helper.dart';
 
-class AddTaskScreen extends StatefulWidget {
-  const AddTaskScreen({super.key});
+class AddTaskPage extends StatefulWidget {
+  const AddTaskPage({super.key});
 
   @override
-  _AddTaskScreenState createState() => _AddTaskScreenState();
+  _AddTaskPageState createState() => _AddTaskPageState();
 }
 
-class _AddTaskScreenState extends State<AddTaskScreen> {
+class _AddTaskPageState extends State<AddTaskPage> {
   String _title = '';
   String _description = '';
   String _status = 'Todo';
@@ -19,7 +17,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.grey1,
+        backgroundColor: Colors.black,
         title: const Align(
           alignment: Alignment.centerLeft,
           child: Padding(
@@ -33,12 +31,16 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Ajouter', style: AppTextStyles.title1),
+            const Text('Ajouter',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Status', style: AppTextStyles.title3),
+                const Text(
+                  'Status',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   decoration: BoxDecoration(
@@ -63,7 +65,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               Icon(
                                 Icons.circle,
                                 color: _getStatusColor(value),
-                                size: 16,
+                                size: 16, // Slightly bigger circle
                               ),
                               const SizedBox(width: 8),
                               Text(value),
@@ -79,7 +81,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               Icon(
                                 Icons.circle,
                                 color: _getStatusColor(_status),
-                                size: 16,
+                                size: 16, // Slightly bigger circle
                               ),
                               const SizedBox(width: 8),
                               const Text('Status'),
@@ -129,10 +131,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   Navigator.pop(context, true);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.grey2,
+                  backgroundColor: Colors.grey,
                   minimumSize: const Size(150, 50),
                 ),
-                child: const Text('Ajouter', style: AppTextStyles.title2),
+                child: const Text('Ajouter', style: TextStyle(fontSize: 18)),
               ),
             ),
           ],
@@ -142,7 +144,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         onPressed: () {
           Navigator.pop(context);
         },
-        backgroundColor: AppColors.red,
+        backgroundColor: Colors.red,
         child: const Icon(Icons.close, color: Colors.white),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
@@ -152,13 +154,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Color _getStatusColor(String status) {
     switch (status) {
       case 'In progress':
-        return AppColors.blue;
+        return Colors.blue;
       case 'Done':
-        return AppColors.green;
+        return Colors.green;
       case 'Bug':
-        return AppColors.red;
+        return Colors.red;
       default:
-        return AppColors.grey2;
+        return Colors.grey;
     }
   }
 }
