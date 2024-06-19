@@ -1,4 +1,3 @@
-// main.dart
 import 'package:flutter/material.dart';
 import 'screens/task_list_screen.dart';
 
@@ -16,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const TaskListScreen(),
+      home: const TAskListScreen(),
     );
   }
 }
