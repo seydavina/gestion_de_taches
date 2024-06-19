@@ -1,49 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/task_provider.dart';
-import '../widgets/task_tile.dart';
-import 'add_task_screen.dart';
 
-class TaskListScreen extends StatefulWidget {
-  @override
-  _TaskListScreenState createState() => _TaskListScreenState();
-}
-
-class _TaskListScreenState extends State<TaskListScreen> {
-  bool _showCompletedTasks = false;
+class TaskListScreen extends StatelessWidget {
+  const TaskListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final taskProvider = Provider.of<TaskProvider>(context);
-    final tasks = _showCompletedTasks ? taskProvider.getFilteredTasks(true) : taskProvider.getFilteredTasks(false);
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Todo App'),
-        actions: [
-          IconButton(
-            icon: Icon(_showCompletedTasks ? Icons.visibility_off : Icons.visibility),
-            onPressed: () {
-              setState(() {
-                _showCompletedTasks = !_showCompletedTasks;
-              });
+        title: const Text('Liste des tâches'),
+      ),
+      body: Consumer<TaskProvider>(
+        builder: (context, taskProvider, child) {
+          final tasks = taskProvider.tasks;
+          return ListView.builder(
+            itemCount: tasks.length,
+            itemBuilder: (context, index) {
+              final task = tasks[index];
+              return ListTile(
+                title: Text(task.title),
+                subtitle: Text(task.description),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    Provider.of<TaskProvider>(context, listen: false).deleteTask(task.id);
+                  },
+                ),
+              );
             },
-          ),
-        ],
-      ),
-      body: ListView.builder(
-        itemCount: tasks.length,
-        itemBuilder: (ctx, index) {
-          return TaskTile(task: tasks[index]);
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => AddTaskScreen(),
-            ),
           );
         },
       ),
