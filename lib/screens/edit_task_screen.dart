@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:gestion_de_taches/database/database_helper.dart';
 
@@ -8,7 +10,7 @@ class EditTaskScreen extends StatefulWidget {
   const EditTaskScreen({super.key, required this.task, required this.onUpdate});
 
   @override
-  _EditTaskScreenState createState() => _EditTaskScreenState();
+  createState() => _EditTaskScreenState();
 }
 
 class _EditTaskScreenState extends State<EditTaskScreen> {

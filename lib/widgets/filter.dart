@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-class TaskItem extends StatefulWidget {
+class Filter extends StatefulWidget {
   final Map<String, bool> initialFilters;
   final Function(Map<String, bool>) onFilterChanged;
 
-  const TaskItem({
+  const Filter({
     super.key,
     required this.initialFilters,
     required this.onFilterChanged,
   });
 
   @override
-  _TaskItemState createState() => _TaskItemState();
+  createState() => _FilterState();
 }
 
-class _TaskItemState extends State<TaskItem> {
+class _FilterState extends State<Filter> {
   late Map<String, bool> _filters;
 
   @override

@@ -30,21 +30,21 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE tasks(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        description TEXT NOT NULL,
-        status TEXT NOT NULL
+        title TEXT,
+        description TEXT,
+        status TEXT
       )
     ''');
   }
 
-  Future<int> insertTask(Map<String, dynamic> task) async {
+  Future<int> insertTask(Map<String, String> task) async {
     Database db = await database;
     return await db.insert('tasks', task);
   }
 
-  Future<int> updateTask(Map<String, dynamic> task) async {
+  Future<int> updateTask(Map<String, String> task) async {
     Database db = await database;
-    int id = task['id'];
+    int id = int.parse(task['id']!);
     return await db.update(
       'tasks',
       task,

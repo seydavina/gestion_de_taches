@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:gestion_de_taches/database/database_helper.dart';
 
@@ -47,7 +48,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
                 Container(
-                  width: 150,
+                  width: 150, // Set a fixed width for the dropdown container
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
@@ -76,11 +77,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               ),
                               const SizedBox(width: 8),
                               Flexible(
+                                // Added Flexible widget
                                 child: Text(
                                   value,
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                  overflow: TextOverflow.ellipsis,
+                                      fontWeight: FontWeight.bold), // Bold text
+                                  overflow: TextOverflow
+                                      .ellipsis, // Ensure no overflow
                                 ),
                               ),
                             ],
@@ -101,7 +104,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               const Text(
                                 'Status',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold), // Bold text
                               ),
                             ],
                           );
@@ -118,7 +121,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               decoration: const InputDecoration(
                 labelText: 'Nouvelle tache',
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(12.0)), // Rounded edges
                 ),
               ),
             ),
@@ -129,7 +133,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               decoration: const InputDecoration(
                 labelText: 'Description',
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(12.0)), // Rounded edges
                 ),
               ),
             ),
@@ -137,32 +142,20 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             Center(
               child: ElevatedButton(
                 onPressed: () async {
-                  if (kDebugMode) {
-                    print('Attempting to add task...');
-                  }
-                  int result = await DatabaseHelper().insertTask({
+                  await DatabaseHelper().insertTask({
                     'title': _titleController.text,
                     'description': _descriptionController.text,
                     'status': _status,
                   });
-                  if (kDebugMode) {
-                    print('Add task result: $result');
-                  }
-                  if (result != 0) {
-                    Navigator.pop(context, true);
-                  } else {
-                    if (kDebugMode) {
-                      print('Failed to add task.');
-                    }
-                  }
+                  Navigator.pop(context, true);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
+                  backgroundColor: Colors.black, // Changed to black background
                   minimumSize: const Size(150, 50),
                 ),
                 child: const Text('Ajouter',
                     style: TextStyle(
-                        fontSize: 18, color: Colors.white)),
+                        fontSize: 18, color: Colors.white)), // White text
               ),
             ),
           ],
@@ -172,8 +165,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         onPressed: () {
           Navigator.pop(context);
         },
-        backgroundColor: Colors.black,
-        child: const Icon(Icons.close, color: Colors.white),
+        backgroundColor: Colors.black, // Changed to black
+        child: const Icon(Icons.close, color: Colors.white), // White close icon
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
