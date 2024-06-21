@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:gestion_de_taches/database/database_helper.dart';
 
-class EditTaskScreeen extends StatefulWidget {
+class EditTaskScreen extends StatefulWidget {
   final Map<String, String> task;
   final Function(Map<String, String>) onUpdate;
 
-  const EditTaskScreeen({super.key, required this.task, required this.onUpdate});
+  const EditTaskScreen({super.key, required this.task, required this.onUpdate});
 
   @override
   _EditTaskScreenState createState() => _EditTaskScreenState();
 }
 
-class _EditTaskScreenState extends State<EditTaskScreeen> {
+class _EditTaskScreenState extends State<EditTaskScreen> {
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
   late String _status;
