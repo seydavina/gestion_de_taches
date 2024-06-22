@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gestion_de_taches/database/database_helper.dart';
+import 'package:gestion_de_taches/models/task_model.dart';
 import 'package:gestion_de_taches/widgets/filter.dart';
 import 'package:gestion_de_taches/screens/add_task_screen.dart';
 import 'package:gestion_de_taches/screens/edit_task_screen.dart';
@@ -12,26 +12,12 @@ class TaskListScreen extends StatefulWidget {
 }
 
 class _TaskListScreenState extends State<TaskListScreen> {
-  List<Map<String, dynamic>> tasks = [];
   Map<String, bool> filters = {
     'Todo': true,
     'In progress': true,
     'Done': true,
     'Bug': true,
   };
-
-  @override
-  void initState() {
-    super.initState();
-    _loadTasks();
-  }
-
-  Future<void> _loadTasks() async {
-    final dbTasks = await DatabaseHelper().getTasks();
-    setState(() {
-      tasks = dbTasks;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +30,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.filter_alt,
-                color: Colors.white), // Changed filter icon
+            icon: const Icon(Icons.filter_alt, color: Colors.white),
             onPressed: () {
               showDialog(
                 context: context,
@@ -70,16 +55,17 @@ class _TaskListScreenState extends State<TaskListScreen> {
             MaterialPageRoute(builder: (context) => const AddTaskScreen()),
           );
           if (result == true) {
-            _loadTasks();
+            setState(() {});
           }
         },
-        backgroundColor: Colors.black, // Changed to black
-        child: const Icon(Icons.add, color: Colors.white), // White plus icon
+        backgroundColor: Colors.black,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
 
   Widget _buildTaskList() {
+    final tasks = TaskModel().tasks;
     if (tasks.isEmpty) {
       return const Center(child: Text("Vous n'avez aucune tâche!"));
     }
@@ -91,16 +77,16 @@ class _TaskListScreenState extends State<TaskListScreen> {
           margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            border: Border.all(color: _getStatusColor(task['status'])),
+            border: Border.all(color: _getStatusColor(task.status)),
             borderRadius: BorderRadius.circular(5),
           ),
           child: ListTile(
-            leading: Icon(Icons.circle, color: _getStatusColor(task['status'])),
+            leading: Icon(Icons.circle, color: _getStatusColor(task.status)),
             title: Text(
-              task['title'],
+              task.title,
               style: const TextStyle(
                 color: Colors.black,
-                fontWeight: FontWeight.bold, // Make the title bold
+                fontWeight: FontWeight.bold,
               ),
             ),
             onTap: () async {
@@ -108,17 +94,10 @@ class _TaskListScreenState extends State<TaskListScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => EditTaskScreen(
-                    task: {
-                      'id': task['id'].toString(),
-                      'title': task['title'],
-                      'description': task['description'],
-                      'status': task['status'],
-                    },
+                    task: task,
                     onUpdate: (updatedTask) {
                       setState(() {
-                        tasks = List.from(tasks)
-                          ..removeAt(index)
-                          ..insert(index, updatedTask);
+                        TaskModel().updateTask(updatedTask);
                       });
                     },
                   ),
@@ -131,9 +110,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 
-  List<Map<String, dynamic>> _filteredTasks() {
-    return tasks.where((task) {
-      return filters[task['status']]!;
+  List<Task> _filteredTasks() {
+    return TaskModel().tasks.where((task) {
+      return filters[task.status]!;
     }).toList();
   }
 

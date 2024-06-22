@@ -1,11 +1,9 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
-import 'package:gestion_de_taches/database/database_helper.dart';
+import 'package:gestion_de_taches/models/task_model.dart';
 
 class EditTaskScreen extends StatefulWidget {
-  final Map<String, String> task;
-  final Function(Map<String, String>) onUpdate;
+  final Task task; // Change type to Task
+  final Function(Task) onUpdate; // Change type to Task
 
   const EditTaskScreen({super.key, required this.task, required this.onUpdate});
 
@@ -21,10 +19,9 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   @override
   void initState() {
     super.initState();
-    _titleController = TextEditingController(text: widget.task['title']);
-    _descriptionController =
-        TextEditingController(text: widget.task['description']);
-    _status = widget.task['status']!;
+    _titleController = TextEditingController(text: widget.task.title);
+    _descriptionController = TextEditingController(text: widget.task.description);
+    _status = widget.task.status;
   }
 
   @override
@@ -91,8 +88,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                               Flexible(
                                 child: Text(
                                   value,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -148,22 +144,15 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
             const SizedBox(height: 16),
             Center(
               child: ElevatedButton(
-                onPressed: () async {
-                  if (mounted) {
-                    await DatabaseHelper().updateTask({
-                      'id': widget.task['id']!,
-                      'title': _titleController.text,
-                      'description': _descriptionController.text,
-                      'status': _status,
-                    });
-                    widget.onUpdate({
-                      'id': widget.task['id']!,
-                      'title': _titleController.text,
-                      'description': _descriptionController.text,
-                      'status': _status,
-                    });
-                    Navigator.pop(context, true);
-                  }
+                onPressed: () {
+                  final updatedTask = Task(
+                    id: widget.task.id,
+                    title: _titleController.text,
+                    description: _descriptionController.text,
+                    status: _status,
+                  );
+                  widget.onUpdate(updatedTask);
+                  Navigator.pop(context, true);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
