@@ -43,7 +43,6 @@ Voici les fonctionnalités présentes dans l’application:
 <hr>
 <p>- Affichage des tâches filtrées (In progress - Bug)</p>
   <img src="https://github.com/Limssly/gestion_de_taches/assets/109959995/fc041bc0-cd22-4b13-82b0-ef4fe72b639c">
-
-
-<!-- FIN -->
-  
+<hr>
+<p><strong>FIN</strong></p>
+<hr>
