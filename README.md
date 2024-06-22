@@ -20,3 +20,6 @@ Voici les fonctionnalités présentes dans l’application:
 
 
 ## Captures d'écrans
+<p>Accueil de l'application</p>
+<img alt="Accueil" src="https://github.com/Limssly/gestion_de_taches/assets/109959995/bc22bc39-61d4-4cf9-899e-dee9baa736ec">
+
