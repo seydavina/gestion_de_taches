@@ -32,10 +32,15 @@ Voici les fonctionnalités présentes dans l’application:
 <p>- Ajout de nouvelles tâches</p>
   <img src="https://github.com/Limssly/gestion_de_taches/assets/109959995/9c6f639c-c0ee-4cbc-b58f-eff9635958a8">
 <hr>
-<p>- Modification de la tâche 'Création de base de données' avec un statut 'Done'</p>
+<p>- Modification de la tâche 'Création de la base de données' avec un statut 'Done' ainsi que la tâche 'Initialisation du projet'</p>
   <img src="https://github.com/Limssly/gestion_de_taches/assets/109959995/bc4e8163-5f2f-484b-bc43-3beeda6c6c88">
 <hr>
-<p>- Filtrage des tâches (In progress - Done)</p>
+<p>- Visualisation après modification</p>
+  <img src="https://github.com/Limssly/gestion_de_taches/assets/109959995/1b33792c-2ec4-4b83-832e-3bca28c21dd4">
+<hr>
+<p>- Filtrage des tâches (In progress - Bug)</p>
   <img src="https://github.com/Limssly/gestion_de_taches/assets/109959995/62018031-7320-46d6-b97c-decd4ce5338d">
+<hr>
+<p>- Affichage des tâches filtrées (In progress - Bug)</p>
+  <img src="https://github.com/Limssly/gestion_de_taches/assets/109959995/fc041bc0-cd22-4b13-82b0-ef4fe72b639c">
   
-
